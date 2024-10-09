@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "475841814007",
+    "project_id": "job-finder-app-45a09",
+    "storage_bucket": "job-finder-app-45a09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475841814007:android:be07504b943bd21b85e2f2",
+        "android_client_info": {
+          "package_name": "com.vishesha.job_finder_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOBVTnuJDW7_lhYZYQ8FjkEynmnf_6ijI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
