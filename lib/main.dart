@@ -1,29 +1,46 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:job_finder_application/LoginPage/login_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
- final Future<FirebaseApp>_initialization = Firebase.initializeApp();
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _initialization,
+        future: _initialization,
         builder: (context, snapshot)
-        //snapshot contain our data
-        {
-          if ( snapshot.connectionState == ConnectionState.waiting )
-          {
-            return  MaterialApp(
+            //snapshot contain our data
+            {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return MaterialApp(
               home: Scaffold(
                 body: Center(
-                  child: Text("Welcome to our Application...",
+                  child: Text(
+                    "Welcome to our Application...",
+                    style: TextStyle(
+                      color: Colors.deepPurple,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'signatra',
+                      fontSize: 40,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return MaterialApp(
+              home: Scaffold(
+                body: Center(
+                  child: Text(
+                    "An Error has occurred",
                     style: TextStyle(
                       color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
@@ -35,45 +52,16 @@ class MyApp extends StatelessWidget {
             );
           }
 
-          else if (snapshot.hasError)
-            {
-              return MaterialApp(
-                home: Scaffold(
-                  body: Center(
-                    child: Text("An Error has occurred",
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
-
           return MaterialApp(
-            debugShowCheckedModeBanner : false,
+            debugShowCheckedModeBanner: false,
             title: "Job Finder Application",
-            theme:ThemeData(
+            theme: ThemeData(
               scaffoldBackgroundColor: Colors.black87,
-              primarySwatch:  Colors.deepPurple,
+              primarySwatch: Colors.deepPurple,
             ),
-            home: Scaffold(
-              body: Center(
-                child: Text("hello",
-                  style: TextStyle(
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40,
-                  ),
-                ),
-              ),
-
-            ),
+             // home: UserState(),
+            home: Login(),
           );
-          }
-    );
+        });
   }
 }
-
