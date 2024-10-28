@@ -1,7 +1,12 @@
 
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:job_finder_application/ForgetPassword/forget_password_screen.dart';
+import 'package:job_finder_application/SignupPage/signup_screen.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+
+String loginUrlImage ='https://i.pinimg.com/736x/29/98/53/299853174e2c2e5a3a8954d03147ec6e.jpg';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,16 +15,56 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-String loginUrlImage ='https://i.pinimg.com/736x/29/98/53/299853174e2c2e5a3a8954d03147ec6e.jpg';
+
 
 //Use “final” when you have values that should not change after initialization.
 final TextEditingController _emailTextController = TextEditingController(text: ' ');
 final TextEditingController _passTextController = TextEditingController(text:' ');
 //bool _isLoading = false;
-bool _obscureText =true;
-
+bool _obscureText =false;
+final FirebaseAuth _auth =FirebaseAuth.instance;
 final _loginFormKey = GlobalKey<FormState>();
 
+
+final passwordValidator = MultiValidator(
+  [
+    RequiredValidator(errorText: 'password is required'),
+    MinLengthValidator(8,
+        errorText: 'password must be at least 8 digits long'),
+    PatternValidator(r'(?=.*?[#?!@$%^&*-])',
+        errorText: 'passwords must have at least one special character')
+  ],
+);
+
+// void _submitFormOnLogin() async
+// {
+//   final  isValid = _loginFormKey.currentState!.validate();
+//   if(isValid){
+//     setState(() {
+//       _isLoading =true;
+//     });
+//
+//
+//     try
+//     {
+//       await  _auth.signInWithEmailAndPassword(
+//         email: _emailTextController.text.trim().toLowerCase(),
+//         password: _passTextController.text.trim(),
+//       );
+//       Navigator.canPop(context) ? Navigator.pop(context): null;
+//     }catch (error)
+//     {
+//       setState( (){
+//         _isLoading =false;
+//       });
+//       // GlobalMethord.showErrorDialog(error: error.toString(), ctx: context);
+//       print('error occurred $error');
+//     }
+//   }
+//   setState(() {
+//     _isLoading= false;
+//   });
+// }
 
 class _LoginState extends State<Login> {
   @override
@@ -52,7 +97,10 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.only(left: 80 , right: 80),
                   child: Image.asset('assets/images/login.png'),
                 ),
+
                 const SizedBox(height: 15,),
+
+
                 Form(
                   key: _loginFormKey,
                   child:  Column(
@@ -60,8 +108,8 @@ class _LoginState extends State<Login> {
 
                       TextFormField(
                         textInputAction: TextInputAction.next,
-                        //onEditingComplete: () =>  FocusScope.of(context).requestFocus(_passFocusNode),
                         keyboardType: TextInputType.emailAddress,
+                        //onEditingComplete: () =>  FocusScope.of(context).requestFocus(_passFocusNode),
                         controller: _emailTextController,
                         obscureText: false,
 
@@ -76,29 +124,28 @@ class _LoginState extends State<Login> {
                             return null;
                           }
                         },
+
                         style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          hintText:  "Email",
-                          hintStyle: TextStyle(color: Colors.white),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          errorBorder:  UnderlineInputBorder(
-                            borderSide: BorderSide(color:  Colors.red),
-                          ),
+
+                        decoration: InputDecoration(
+                          labelText: "Email*",labelStyle:TextStyle(fontSize: 25) ,
+                          hintText: 'Enter Email',
+                          hintStyle: const TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50)),
+
                         ),
+
                       ),
 
-                      const SizedBox(height:5,),
+                      const SizedBox(height:14),
 
                       TextFormField(
                         textInputAction: TextInputAction.next,
-                        //focusNode: _passFocusNode,
                         keyboardType: TextInputType.visiblePassword,
                         controller: _passTextController,
+                        //focusNode: _passFocusNode,
+                        //obscureText: true,
                         obscureText: !_obscureText,
                         validator: (value){
                           if(value!.isEmpty || value.length <7){
@@ -125,26 +172,33 @@ class _LoginState extends State<Login> {
                               color: Colors.white,
                             ),
                           ),
-                          hintText:  "Password",
+                          labelText: "Password*",labelStyle:TextStyle(fontSize: 25) ,
+                          hintText: 'Enter Password',
                           hintStyle: const TextStyle(color: Colors.white),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          errorBorder:  const UnderlineInputBorder(
-                            borderSide: BorderSide(color:  Colors.red),
-                          ),
-                        ),
+                          border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50)),
 
+
+                          //enabledBorder: const UnderlineInputBorder(
+                          //   borderSide: BorderSide(color: Colors.white),
+                          // ),
+                          // focusedBorder: const UnderlineInputBorder(
+                          //   borderSide: BorderSide(color: Colors.white),
+                          // ),
+                          // errorBorder:  const UnderlineInputBorder(
+                          //   borderSide: BorderSide(color:  Colors.red),
+                          // ),
+
+                        ),
                       ),
+
                       const SizedBox(height:15,),
+
                       Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(
                           onPressed: (){
-                           // Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgetPassword()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgetPassword()));
                           },
                           child: const Text(
                             'Forget password?',
@@ -156,9 +210,11 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height:10,),
+
                       MaterialButton(
-                        onPressed: (){},   // _submitFormOnLogin,
+                        onPressed:(){},  //_submitFormOnLogin,
                         color: Colors.cyan,
                         elevation:  8,
                         shape: RoundedRectangleBorder(
@@ -175,44 +231,40 @@ class _LoginState extends State<Login> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
-
                                 ),
                               )
                             ],
                           ),
                         ),
                       ),
+
                       const SizedBox(height:40,),
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const TextSpan(
-                                  text: 'Do not have an account?',
+                               Text('Do not have an account?',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
+                                  )),
 
-                                  )
-                              ),
-                              const TextSpan(text: '     '),
-                              TextSpan(
-                                //recognizer:  TapGestureRecognizer()
-                                 // ..onTap =() => Navigator.push(context, MaterialPageRoute(builder: (context)  => SignUp())),
-                                text:  'Signup',
-                                style: const TextStyle(
-                                  color: Colors.cyan,
-                                  fontWeight:  FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
+                                   TextButton(
+                                     onPressed: () {
+                                       Navigator.push(context, MaterialPageRoute(builder: (context)=> Signup()));
+                                     },
+                                     child: Text("Sign up!",
+                                       style: TextStyle(
+                                       color: Colors.cyan,
+                                       ),
+                                     ),
+                                   )
                             ],
                           ),
-                        ),
-                      ),
                     ],
-                  ),),
+                  ),
+                ),
               ],
             ),
           ),

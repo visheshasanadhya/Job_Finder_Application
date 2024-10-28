@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
 import 'package:job_finder_application/LoginPage/login_screen.dart';
+import 'package:job_finder_application/SignupPage/signup_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +59,7 @@ class MyApp extends StatelessWidget {
             title: "Job Finder Application",
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.black87,
-              primarySwatch: Colors.deepPurple,
+              primarySwatch: Colors.cyan,
             ),
              // home: UserState(),
             home: Login(),
